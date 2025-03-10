@@ -6,6 +6,15 @@
 
   The user doesn't have to wait for the page to finish loading before navigating away (this is called interruptable navigation).
  */
+
+  /**
+   Since loading.tsx is a level higher than /invoices/page.tsx and /customers/page.tsx in the file system, it's also applied to those pages.
+   your loading skeleton will apply to the invoices.
+   */
+import DashboardSkeleton from '@/app/ui/skeletons';
+
 export default function Loading() {
-  return <div>Loading...</div>;
+  // return <div>Loading...</div>;
+  
+  return <DashboardSkeleton />;
 }
