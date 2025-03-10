@@ -5,6 +5,7 @@
 
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 import { useSearchParams, usePathname, useRouter } from 'next/navigation';
+import { useDebouncedCallback } from 'use-debounce';
 
 export default function Search({ placeholder }: { placeholder: string }) {
   
@@ -12,18 +13,31 @@ export default function Search({ placeholder }: { placeholder: string }) {
   const pathname = usePathname();
   const { replace } = useRouter();
 
-  function handleSearch(term: string) {
-    // URLSearchParams is a Web API that provides utility methods for manipulating the URL query parameters. Instead of creating a complex string literal, you can use it to get the params string like ?page=1&query=a.
+  // By debouncing, you can reduce the number of requests sent to your database, thus saving resources.
+  const handleSearch = useDebouncedCallback((term) => {
+    console.log(`Searching... ${term}`);
     const params = new URLSearchParams(searchParams);
     if (term) {
       params.set('query', term);
     } else {
       params.delete('query');
     }
-    // ${pathname} is the current path, in your case, "/dashboard/invoices"
-    // replace(${pathname}?${params.toString()}) updates the URL with the user's search data. For example, /dashboard/invoices?query=lee if the user searches for "Lee".
     replace(`${pathname}?${params.toString()}`);
-  }
+  }, 300);
+  // function handleSearch(term: string) {
+  //   // URLSearchParams is a Web API that provides utility methods for manipulating the URL query parameters. Instead of creating a complex string literal, you can use it to get the params string like ?page=1&query=a.
+    
+  //   console.log(`Searching... ${term}`);
+  //   const params = new URLSearchParams(searchParams);
+  //   if (term) {
+  //     params.set('query', term);
+  //   } else {
+  //     params.delete('query');
+  //   }
+  //   // ${pathname} is the current path, in your case, "/dashboard/invoices"
+  //   // replace(${pathname}?${params.toString()}) updates the URL with the user's search data. For example, /dashboard/invoices?query=lee if the user searches for "Lee".
+  //   replace(`${pathname}?${params.toString()}`);
+  // }
   return (
     <div className="relative flex flex-1 flex-shrink-0">
       <label htmlFor="search" className="sr-only">
